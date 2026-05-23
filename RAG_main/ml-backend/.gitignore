@@ -1,0 +1,184 @@
+# ML Backend - Python Gitignore
+# =================================
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.Python-env
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Project specific - Generated data and cache
+# Cache directories (generated during processing)
+data/extracted_text/*.json
+data/indices/*.json
+!data/extracted_text/all_documents.json
+!data/indices/metadata.json
+
+# Temporary and cache directories
+.cache/
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Log files
+*.log
+logs/
+*.out
+debug.log
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook (if used for development)
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Python version managers
+.python-version
+.python-version-gc
+.pyenv-version
+
+# Package managers
+Pipfile.lock
+poetry.lock
+pdm.lock
+.pdm.toml
+poetry.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery (if used)
+celerybeat-schedule
+celerybeat.pid
+
+# Database files (if any are created)
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.bak
+*.backup
+*.orig
+*.rej
+*.bakup
+
+# Documentation builds
+docs/_build/
+*.pdf
+!Docs/*.pdf
+
+# Model files (if ML models are saved)
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.model
+*.joblib
+models/
+
+# Configuration files (local overrides)
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+config.local.json
+config.local.yaml
+
+# Secrets and sensitive files
+secrets.json
+.secrets
+*.key
+*.pem
+*.crt
+
+# Profiling and performance
+*.prof
+*.perf
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# Optional: Uncomment to ignore all data except specific files
+# data/*
+# !data/extracted_text/all_documents.json
+# !data/indices/
+
+# Optional: Uncomment to ignore individual cache files
+# data/extracted_text/*.json
+# !data/extracted_text/all_documents.json
+# data/indices/*.json
+# !data/indices/metadata.json

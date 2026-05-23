@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+    provider = "prisma-client-js"
+    output   = "../generated/prisma"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+enum UserType {
+    Intern
+    Researcher
+    Mentor
+}
+
+enum ConversationType {
+    Direct
+}
+
+model User {
+    id        String   @id @default(cuid())
+    email     String   @unique
+    password  String
+    firstName String
+    lastName  String
+    username  String   @unique
+    userType  UserType @default(Researcher)
+    verified  Boolean  @default(false)
+    isPrivate Boolean  @default(false)
+    phoneNumber String?
+    title       String?
+    institution String?
+    bio         String?  @db.Text
+    interests   String[]
+    city        String?
+    pincode     Int?
+
+    followers   Follows[] @relation("following")
+    following   Follows[] @relation("follower")
+    followedTopics Topic[] @relation("UserTopics")
+
+    postedInternships Internship[] @relation("MentorRelation")
+    hiredInternships  Internship[] @relation("InternRelation")
+    
+    annotations   Annotation[]
+    conversationParticipants ConversationParticipant[]
+    sentMessages Message[] @relation("SentMessages")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("users")
+}
+
+model Conversation {
+    id        String           @id @default(cuid())
+    type      ConversationType @default(Direct)
+    pairKey   String           @unique
+    participants ConversationParticipant[]
+    messages  Message[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("conversations")
+}
+
+model ConversationParticipant {
+    conversationId String
+    userId         String
+    lastReadAt     DateTime?
+
+    conversation Conversation @relation(fields: [conversationId], references: [id])
+    user         User         @relation(fields: [userId], references: [id])
+
+    @@id([conversationId, userId])
+    @@index([userId])
+    @@map("conversation_participants")
+}
+
+model Message {
+    id             String       @id @default(cuid())
+    conversationId String
+    senderId       String
+    body           String       @db.Text
+    createdAt      DateTime     @default(now())
+
+    conversation Conversation @relation(fields: [conversationId], references: [id])
+    sender       User         @relation("SentMessages", fields: [senderId], references: [id])
+
+    @@index([conversationId, createdAt])
+    @@map("messages")
+}
+
+model Follows {
+    follower    User   @relation("follower", fields: [followerId], references: [id])
+    followerId  String
+    following   User   @relation("following", fields: [followingId], references: [id])
+    followingId String
+
+    @@id([followerId, followingId])
+    @@map("follows")
+}
+
+model Topic {
+    id    String @id @default(cuid())
+    name  String @unique
+    users User[] @relation("UserTopics")
+
+    @@map("topics")
+}
+
+model Internship {
+    id          String   @id @default(cuid())
+    title       String
+    description String   @db.Text
+    isOpen      Boolean  @default(true)
+
+    // Mentor who created the internship
+    mentorId    String
+    mentor      User     @relation("MentorRelation", fields: [mentorId], references: [id])
+
+    // The Intern working on it (optional until filled)
+    internId    String?
+    intern      User?   @relation("InternRelation", fields: [internId], references: [id])
+
+    // Research data
+    syntheses   ResearchSynthesis[]
+
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@map("internships")
+}
+
+model ResearchSynthesis {
+    id           String     @id @default(cuid())
+    query        String
+    summary      String     @db.Text
+    sources      Json?
+    internshipId String
+    internship   Internship @relation(fields: [internshipId], references: [id])
+    annotations  Annotation[]
+    createdAt    DateTime   @default(now())
+
+    @@map("research_syntheses")
+}
+
+model Annotation {
+    id                  String            @id @default(cuid())
+    content             String            @db.Text
+    authorId            String
+    author              User              @relation(fields: [authorId], references: [id])
+    researchSynthesisId String
+    researchSynthesis   ResearchSynthesis @relation(fields: [researchSynthesisId], references: [id])
+    createdAt           DateTime          @default(now())
+
+    @@map("annotations")
+}

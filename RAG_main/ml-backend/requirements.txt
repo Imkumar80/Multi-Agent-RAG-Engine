@@ -1,0 +1,38 @@
+# Web Framework
+fastapi
+uvicorn[standard]
+
+# Database
+sqlalchemy
+alembic
+
+# Vector Database
+qdrant-client
+
+# AI/ML
+sentence-transformers
+torch
+openai
+
+# API Integration
+httpx
+requests
+
+# Environment & Config
+python-dotenv
+pydantic
+pydantic-settings
+
+# Utilities
+python-dateutil
+pytz
+redis
+
+# Logging
+structlog
+
+# Development
+pytest
+pytest-asyncio
+black
+flake8

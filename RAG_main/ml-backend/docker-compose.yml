@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # The Main Python Web Server
+  api:
+    build: .
+    container_name: resonav-api
+    ports:
+      - "8001:8001"
+    environment:
+      - ENVIRONMENT=production
+      - QDRANT_URL=http://qdrant:6333
+      - REDIS_URL=redis://redis:6379/0
+      # Provide your OpenAI API Key securely via a local .env file!
+    env_file:
+      - .env
+    depends_on:
+      - qdrant
+      - redis
+    networks:
+      - resonav-network
+
+  # Local Qdrant instance
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: resonav-qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    networks:
+      - resonav-network
+
+  # Local Redis instance for Chat Sessions
+  redis:
+    image: redis:7-alpine
+    container_name: resonav-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - resonav-network
+
+volumes:
+  qdrant_storage:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  resonav-network:
+    driver: bridge
